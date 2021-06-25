@@ -1,37 +1,35 @@
-const fs = require('fs/promises')
+const fs = require('fs').promises
 const path = require('path')
 
-const contactsPath = path.join(__dirname, '/db/contacts.json')
+const contactsPath = path.join(__dirname, '/contacts.json')
 
 const listContacts = async () => {
   try {
-    const contactsList = await (await fs.readFile(contactsPath)).toString()
-    return JSON.parse(contactsList)
+    const contactsList = await fs.readFile(contactsPath, 'utf8')
+    const parsedContactsList = JSON.parse(contactsList)
+    return parsedContactsList
   } catch (error) {
-    console.error(error.message)
+    throw error
   }
 }
 
 const getContactById = async (contactId) => {
   if (isNaN(contactId)) {
-    console.warn('Id has to be a number')
-    return
+    throw new Error('Id has to be a number')
   }
 
   try {
-    const contactsList = await (await fs.readFile(contactsPath)).toString()
-    const parsedContactsList = JSON.parse(contactsList)
-    const contact = await parsedContactsList.filter(contact => contact.id === contactId)
-    return contact
+    const contactsList = await listContacts()
+    const contactById = contactsList.find(({ id }) => Number(contactId) === id)
+    return contactById
   } catch (error) {
-    console.error(error.message)
+    throw error
   }
 }
 
 const removeContact = async (contactId) => {
   if (isNaN(contactId)) {
-    console.warn('Id has to be a number')
-    return
+    throw new Error('Id has to be a number')
   }
 
   try {
@@ -39,36 +37,38 @@ const removeContact = async (contactId) => {
       throw new Error('Please enter id')
     }
 
-    const contactsList = await (await fs.readFile(contactsPath)).toString()
-    const parsedContactsList = JSON.parse(contactsList)
-    const newContacts = parsedContactsList.filter(contact => contact.id !== contactId)
+    const contactsList = await listContacts()
+    const newContacts = contactsList.filter(
+      (contact) => contact.id !== Number(contactId)
+    )
 
-    if (newContacts.length === parsedContactsList.length) {
+    if (newContacts.length === contactsList.length) {
       throw new Error(`Contact with id ${contactId} does not exist`)
     }
 
-    await fs.writeFile(contactsPath, JSON.stringify(newContacts))
+    await fs.writeFile(contactsPath, JSON.stringify(newContacts), 'utf8')
     return newContacts
   } catch (err) {
-    console.error(err.message)
+    throw error
   }
 }
 
 const addContact = async (body) => {
   try {
-    const contactsList = await (await fs.readFile(contactsPath)).toString()
-    const parsedContactsList = JSON.parse(contactsList)
+    const contactsList = await listContacts()
 
     const { name, email, phone } = body
     const newContact = {
-      id: parsedContactsList.length + 1,
-      name,
-      email,
-      phone,
+      id: contactsList.length + 1,
+      ...body,
     }
 
-    const possibleRepeatContact = parsedContactsList.reduce((acc, contact) => {
-      if (contact.name === name || contact.email === email || contact.phone === phone) {
+    const possibleRepeatContact = contactsList.reduce((acc, contact) => {
+      if (
+        contact.name === name ||
+        contact.email === email ||
+        contact.phone === phone
+      ) {
         return acc + 1
       }
       return acc
@@ -77,23 +77,26 @@ const addContact = async (body) => {
       throw new Error('Please enter unique data')
     }
 
-    parsedContactsList.push(newContact)
-    fs.writeFile(contactsPath, JSON.stringify(parsedContactsList))
+    contactsList.push(newContact)
+    await fs.writeFile(contactsPath, JSON.stringify(contactsList))
     return newContact
   } catch (err) {
-    console.error(err.message)
+    throw error
   }
 }
 
 const updateContact = async (contactId, body) => {
   try {
-    const contactList = await listContacts()
-    const changedContact = await getContactById(contactId)
-    const changedContactList = contactList.map(contact => Number(contactId) === contact.id ? { ...changedContact, ...body } : contact)
-    await fs.writeFile(contactsPath, JSON.stringify(changedContactList))
-    return changedContactList
+    const initialContact = await getContactById(contactId)
+    const contactsList = await listContacts()
+    const updatedContact = { ...initialContact, ...body }
+    const updatedContactList = contactsList.map((contact) => {
+      return contact.id === Number(contactId) ? updatedContact : contact
+    })
+    await fs.writeFile(contactsPath, JSON.stringify(updatedContactList), 'utf8')
+    return updatedContact
   } catch (error) {
-    console.error(error.message)
+    throw error
   }
 }
 
@@ -102,5 +105,5 @@ module.exports = {
   getContactById,
   removeContact,
   addContact,
-  updateContact
+  updateContact,
 }
