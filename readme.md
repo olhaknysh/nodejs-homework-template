@@ -19,27 +19,38 @@ Please use `http://yourhostname/api/contacts`
 
 ## Commom routes
 
-`get '/'`
+- `get '/'`
+
 Returns list of all contacts
 
-`get '/:contactId'`
+- `get '/:contactId'`
+
 Returns specific contact with Id
 
-`post '/'`
+- `post '/'`
+
 Adds new contact
+
 By default field 'favorite' is `false`
+
 Returns `status:success`
 
-`delete '/:contactId`
-Deletes specefic contact with Id  
+- `delete '/:contactId`
+
+Deletes specefic contact with Id
+
 Returns `status:success`
 
-`put '/:contactId'`
+- `put '/:contactId'`
+
 Changes contact
+
 Returns `status:success`
 
-`patch '/:contactId/favorite'`
+- `patch '/:contactId/favorite'`
+
 Changes the field 'favorite' to sent value
+
 Retuns updatedContact and `status:success`
 
 ## Validation
