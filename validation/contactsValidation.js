@@ -1,4 +1,6 @@
-const Joi = require('joi')
+const Joi = require('joi');
+const { ValidationError,
+  MissingFieldsError } = require('../helpers/errors')
 
 const schemaCreateContact = Joi.object({
   name: Joi.string().alphanum().min(3).max(30).required(),
@@ -16,26 +18,26 @@ const schemaCreateContact = Joi.object({
 })
 
 const schemaUpdateContact = Joi.object({
-  name: Joi.string().alphanum().min(3).max(30).optional(),
+  name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string()
     .email({
       minDomainSegments: 2,
       tlds: { allow: ['com', 'net'] },
     })
-    .optional(),
+    .required(),
   phone: Joi.string()
     .pattern(/^(\+)?((\d{2,3}) ?\d|\d)(([ -]?\d)|( ?(\d{2,3}) ?)){5,12}\d$/)
-    .optional(),
+    .required(),
 }).min(1)
 
 const validate = (schema, body, next) => {
   if (Object.keys(body).length === 0) {
-    return next({ status: 400, message: 'missing fields' })
+    return next(new MissingFieldsError('missing fields'))
   }
   const { error } = schema.validate(body)
   if (error) {
     const [{ message }] = error.details
-    return next({ status: 400, message })
+    return next(new ValidationError(message))
   }
   next()
 }
