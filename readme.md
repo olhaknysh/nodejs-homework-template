@@ -1,31 +1,59 @@
-## GoIT Node.js Course Template Homework
+# Contact API
 
-Выполните форк этого репозитория для выполнения домашних заданий (2-6)
-Форк создаст репозиторий на вашем http://github.com
+**_Get in contact_**
 
-Добавьте ментора в коллаборацию
+## Overview
 
-Для каждой домашней работы создавайте свою ветку.
+This API will hepl you with:
 
-- hw02
-- hw03
-- hw04
-- hw05
-- hw06
+- getting list of contacts
+- getting certain contact by Id
+- adding contact
+- changing contact
+- deleting contact
+- additional field 'favorite' can hepl you to sort the contacts
 
-Каждая новая ветка для дз должна делаться с master
+## Getting started
 
-После того как вы закончили выполнять домашнее задание в своей ветке, необходимо сделать пулл-реквест (PR). Потом добавить ментора для ревью кода. Только после того как ментор заапрувит PR, вы можете выполнить мердж ветки с домашним заданием в мастер.
+Please use `http://yourhostname/api/contacts`
 
-Внимательно читайте комментарии ментора. Исправьте замечания и сделайте коммит в ветке с домашним заданием. Изменения подтянуться в PR автоматически после того как вы отправите коммит с исправлениями на github
-После исправления снова добавьте ментора на ревью кода.
+## Commom routes
 
-- При сдаче домашней работы есть ссылка на PR
-- JS-код чистый и понятный, для форматирования используется Prettier
+- `get '/'`
 
-### Команды:
+Returns list of all contacts
 
-- `npm start` &mdash; старт сервера в режиме production
-- `npm run start:dev` &mdash; старт сервера в режиме разработки (development)
-- `npm run lint` &mdash; запустить выполнение проверки кода с eslint, необходимо выполнять перед каждым PR и исправлять все ошибки линтера
-- `npm lint:fix` &mdash; та же проверка линтера, но с автоматическими исправлениями простых ошибок
+- `get '/:contactId'`
+
+Returns specific contact with Id
+
+- `post '/'`
+
+Adds new contact
+
+By default field 'favorite' is `false`
+
+Returns `status:success`
+
+- `delete '/:contactId`
+
+Deletes specefic contact with Id
+
+Returns `status:success`
+
+- `put '/:contactId'`
+
+Changes contact
+
+Returns `status:success`
+
+- `patch '/:contactId/favorite'`
+
+Changes the field 'favorite' to sent value
+
+Retuns updatedContact and `status:success`
+
+## Validation
+
+The fields 'name', 'email' and 'phone' are required in `post` and `put`
+Name`s length has to be more than 3 and less than 30 letters, consists only of a-z, A-Z, and 0-9 Email`s segments number has to be 2, 'com' and 'net' domains are allowed

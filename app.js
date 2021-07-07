@@ -4,6 +4,8 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 
 const contactsRouter = require('./routes/api/contacts')
+const { errorHandler } = require('./helpers/apiHelpers.js')
+const { notFoundHandler } = require('./helpers/apiHelpers.js')
 
 const app = express()
 
@@ -20,22 +22,7 @@ app.use(
 
 app.use('/api/contacts', contactsRouter)
 
-app.use((req, res, next) => {
-  res.status(404).json({
-    status: 'error',
-    code: 404,
-    message: 'Not found',
-  })
-})
-
-app.use((err, req, res, next) => {
-  err.status = err.status ? err.status : 500
-  res.status(err.status).json({
-    status: err.status === 500 ? 'fail' : 'error',
-    code: err.status,
-    message: err.message,
-    data: err.status === 500 ? 'Internal Server Error' : err.data,
-  })
-})
+app.use(notFoundHandler)
+app.use(errorHandler)
 
 module.exports = app
