@@ -1,8 +1,8 @@
 const { Contact } = require('../model/contactModal');
 const { notFoundContact, notCreatedContact, notUpdatedContact } = require('../helpers/errors')
 
-const getContacts = async () => {
-    const contacts = await Contact.find({});
+const getContacts = async (userId) => {
+    const contacts = await Contact.find({ userId });
     return contacts;
 }
 
@@ -16,8 +16,8 @@ const getContactById = async (contactId) => {
     return contact;
 }
 
-const createContact = async ({ name, email, phone, favorite }) => {
-    const contact = new Contact({ name, email, phone, favorite });
+const createContact = async ({ name, email, phone, favorite }, userId) => {
+    const contact = new Contact({ name, email, phone, favorite, userId });
     if (!contact) {
         throw new notCreatedContact(`Could not create the new contact :(`)
     }
