@@ -1,42 +1,63 @@
-class ValidationError extends Error {
+class CustomError extends Error {
     constructor(message) {
         super(message);
         this.status = 400;
     }
 }
 
-class MissingFieldsError extends Error {
+class ValidationError extends CustomError {
+    constructor(message) {
+        super(message);
+        this.status = 400;
+    }
+}
+
+class MissingFieldsError extends CustomError {
     constructor(message) {
         super(message)
         this.status = 400;
     }
 }
 
-class notFoundContact extends Error {
+class notFoundContact extends CustomError {
     constructor(message) {
         super(message)
         this.status = 400;
     }
 }
 
-class notCreatedContact extends Error {
+class notCreatedContact extends CustomError {
     constructor(message) {
         super(message)
         this.status = 400;
     }
 }
 
-class notUpdatedContact extends Error {
+class notUpdatedContact extends CustomError {
     constructor(message) {
         super(message)
         this.status = 400;
     }
 }
 
-class noFavoriteField extends Error {
+class noFavoriteField extends CustomError {
     constructor(message) {
         super(message)
         this.status = 400;
+    }
+}
+
+class notAuthorized extends CustomError {
+    constructor(message) {
+        super(message)
+        this.status = 401;
+    }
+}
+
+class UserWithPasswordAlreadyExists extends CustomError {
+    constructor(message) {
+        super(message)
+        this.status = 409;
     }
 }
 
@@ -46,5 +67,8 @@ module.exports = {
     notFoundContact,
     notCreatedContact,
     notUpdatedContact,
-    noFavoriteField
+    noFavoriteField,
+    notAuthorized,
+    UserWithPasswordAlreadyExists,
+    CustomError
 }

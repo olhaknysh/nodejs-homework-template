@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { Schema, SchemaTypes } = mongoose;
+
+const { User } = require('./userModal.js')
 
 const contactSchema = new Schema({
     name: {
@@ -16,6 +18,9 @@ const contactSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    userId: {
+        type: String,
+    }
 })
 
 const Contact = mongoose.model('contact', contactSchema);

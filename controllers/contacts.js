@@ -7,7 +7,8 @@ const { getContacts,
 const { noFavoriteField } = require('../helpers/errors')
 
 const getAllContactsController = async (req, res) => {
-  const contacts = await getContacts();
+  const { _id } = req.user;
+  const contacts = await getContacts(_id);
   res.json({ contacts, status: 'success' })
 }
 
@@ -21,7 +22,8 @@ const createContactController = async (req, res) => {
   const {
     name, email, phone, favorite
   } = req.body;
-  await createContact({ name, email, phone, favorite });
+  const { _id } = req.user;
+  await createContact({ name, email, phone, favorite }, _id);
   res.json({ status: 'success' });
 }
 

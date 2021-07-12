@@ -4,6 +4,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 
 const contactsRouter = require('./routes/api/contacts')
+const userRouter = require('./routes/api/users')
 const { errorHandler } = require('./helpers/apiHelpers.js')
 const { notFoundHandler } = require('./helpers/apiHelpers.js')
 
@@ -21,6 +22,7 @@ app.use(
 )
 
 app.use('/api/contacts', contactsRouter)
+app.use('/api/users', userRouter)
 
 app.use(notFoundHandler)
 app.use(errorHandler)
