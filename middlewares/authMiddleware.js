@@ -21,7 +21,7 @@ const authMiddleware = async (req, res, next) => {
         }
 
         req.token = token;
-        req.user = user;
+        req.user = userInBase;
         next();
     } catch (err) {
         next(new notAuthorized('Invalid token'));

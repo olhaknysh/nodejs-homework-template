@@ -1,8 +1,7 @@
 const {
     registerUser,
     loginUser,
-    logoutUser,
-    getCurrentUser
+    updateAvatar
 } = require('../services/userService')
 
 const registerUserController = async (req, res) => {
@@ -20,22 +19,29 @@ const loginUserController = async (req, res) => {
 }
 
 const logoutUserController = async (req, res) => {
-    const { _id } = req.user;
-    await logoutUser(_id);
+    await req.user.updateOne({ token: null })
 
     res.json({ message: 'No content' });
 }
 
 const getCurrentUserController = async (req, res) => {
-    const { _id } = req.user;
-    const { email, subscription } = await getCurrentUser(_id);
-
+    const { email, subscription } = req.user
     res.json({ email, subscription })
 }
+
+const updateAvatarController = async (req, res) => {
+    const { user, file, originalUrl } = req;
+    await updateAvatar(user, file, originalUrl);
+
+    const { avatarURL } = user;
+    res.json({ avatarURL })
+}
+
 
 module.exports = {
     registerUserController,
     loginUserController,
     logoutUserController,
-    getCurrentUserController
+    getCurrentUserController,
+    updateAvatarController
 }

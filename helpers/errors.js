@@ -61,6 +61,14 @@ class UserWithPasswordAlreadyExists extends CustomError {
     }
 }
 
+class wrongAvatarExtension extends CustomError {
+    constructor(message) {
+        super(message)
+        this.status = 400;
+    }
+}
+
+
 module.exports = {
     ValidationError,
     MissingFieldsError,
@@ -70,5 +78,6 @@ module.exports = {
     noFavoriteField,
     notAuthorized,
     UserWithPasswordAlreadyExists,
+    wrongAvatarExtension,
     CustomError
 }

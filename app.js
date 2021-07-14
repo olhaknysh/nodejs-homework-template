@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 
 const contactsRouter = require('./routes/api/contacts')
 const userRouter = require('./routes/api/users')
+const avatarsRouter = require('./routes/api/avatars')
 const { errorHandler } = require('./helpers/apiHelpers.js')
 const { notFoundHandler } = require('./helpers/apiHelpers.js')
 
@@ -23,6 +24,7 @@ app.use(
 
 app.use('/api/contacts', contactsRouter)
 app.use('/api/users', userRouter)
+app.use('/api/avatars', avatarsRouter)
 
 app.use(notFoundHandler)
 app.use(errorHandler)
