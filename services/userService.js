@@ -1,5 +1,11 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const gravatar = require('gravatar');
+const fs = require('fs')
+const path = require('path');
+const { v4: uuidv4 } = require('uuid');
+const Jimp = require('jimp');
+
 
 require('dotenv').config();
 
@@ -12,7 +18,7 @@ const registerUser = async (email, password) => {
         throw new UserWithPasswordAlreadyExists('Email in use')
     }
 
-    const user = new User({ email, password });
+    const user = new User({ email, password, avatarURL: gravatar.url(this.email, { s: '250' }, true) });
     await user.save();
     return user
 }
@@ -32,20 +38,26 @@ const loginUser = async (email, password) => {
     return { token };
 }
 
-const logoutUser = async (userId) => {
-    const user = await User.findById(userId);
-    await user.updateOne({ token: null })
-}
+const updateAvatar = async (user, file, url) => {
+    const { path: pathAvatar } = file;
+    const newAvatarPath = path.resolve('./public/avatars');
 
-const getCurrentUser = async (userId) => {
-    const user = await User.findById(userId);
-    const { email, subscription } = user;
-    return { email, subscription };
+    const img = await Jimp.read(pathAvatar);
+    await img.autocrop().cover(250, 250).writeAsync(pathAvatar);
+
+    const [, extension] = file.originalname.split('.')
+    const newNameAvatar = `${uuidv4()}.${extension}`;
+
+    await fs.rename(pathAvatar, `${newAvatarPath}/${newNameAvatar}`, (err) => {
+        if (err) throw err;
+    })
+
+    const newUrl = `${url}/${newNameAvatar}`
+    await user.updateOne({ avatarURL: newUrl });
 }
 
 module.exports = {
     registerUser,
     loginUser,
-    logoutUser,
-    getCurrentUser
+    updateAvatar
 }
