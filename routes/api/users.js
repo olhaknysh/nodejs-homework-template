@@ -1,14 +1,16 @@
 const express = require('express')
 const router = express.Router()
 
-const { validateUser } = require('../../validation/userValidation')
+const { validateUser, validateVerification } = require('../../validation/userValidation')
 
 const {
     registerUserController,
     loginUserController,
     logoutUserController,
     getCurrentUserController,
-    updateAvatarController
+    updateAvatarController,
+    getVerificationTokenController,
+    sendVerificationRequestController
 } = require('../../controllers/users')
 
 const { asyncWrapper } = require('../../helpers/apiHelpers')
@@ -20,5 +22,7 @@ router.post('/login', validateUser, asyncWrapper(loginUserController))
 router.post('/logout', authMiddleware, asyncWrapper(logoutUserController))
 router.get('/current', authMiddleware, validateUser, asyncWrapper(getCurrentUserController))
 router.patch('/avatars', authMiddleware, uploadMiddleware.single('avatar'), asyncWrapper(updateAvatarController));
+router.get('/verify/:verificationToken', asyncWrapper(getVerificationTokenController))
+router.post('/verify', validateVerification, asyncWrapper(sendVerificationRequestController))
 
 module.exports = router

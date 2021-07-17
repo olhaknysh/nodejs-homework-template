@@ -1,5 +1,5 @@
 const { Contact } = require('../model/contactModal');
-const { notFoundContact, notCreatedContact, notUpdatedContact } = require('../helpers/errors')
+const { notFound, notCreatedContact, notUpdatedContact } = require('../helpers/errors')
 
 const getContacts = async (userId) => {
     const contacts = await Contact.find({ userId });
@@ -10,7 +10,7 @@ const getContactById = async (contactId) => {
     const contact = await Contact.findById(contactId);
 
     if (!contact) {
-        throw new notFoundContact(`Contact with id ${contactId} was not found :(`)
+        throw new notFound(`Contact with id ${contactId} was not found :(`)
     }
 
     return contact;
@@ -28,7 +28,7 @@ const createContact = async ({ name, email, phone, favorite }, userId) => {
 const removeContact = async (contactId) => {
     const contact = await Contact.findByIdAndRemove(contactId);
     if (!contact) {
-        throw new notFoundContact(`Contact with id ${contactId} was not found :(`)
+        throw new notFound(`Contact with id ${contactId} was not found :(`)
     }
 }
 

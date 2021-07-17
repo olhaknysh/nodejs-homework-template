@@ -22,10 +22,18 @@ const userSchema = new Schema({
         default: null,
     },
     avatarURL: String,
+    verify: {
+        type: Boolean,
+        default: false,
+    },
+    verifyToken: {
+        type: String,
+        required: [true, 'Verify token is required'],
+    },
 })
 
 userSchema.pre('save', async function () {
-    if (this.isNew) {
+    if (this.isNew || this.isModified) {
         this.password = await bcrypt.hash(this.password, 10)
     }
 })

@@ -14,6 +14,15 @@ const schemaUser = Joi.object({
         .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
 })
 
+const schemaVerification = Joi.object({
+    email: Joi.string()
+        .email({
+            minDomainSegments: 2,
+            tlds: { allow: ['com', 'net'] },
+        })
+        .required(),
+})
+
 const validate = (schema, body, next) => {
     if (Object.keys(body).length === 0) {
         return next(new MissingFieldsError('missing fields'))
@@ -30,6 +39,11 @@ const validateUser = (req, res, next) => {
     return validate(schemaUser, req.body, next)
 }
 
+const validateVerification = (req, res, next) => {
+    return validate(schemaVerification, req.body, next)
+}
+
 module.exports = {
     validateUser,
+    validateVerification
 }
