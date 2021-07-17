@@ -21,15 +21,10 @@ const { asyncWrapper } = require('../../helpers/apiHelpers')
 router.use(authMiddleware);
 
 router.get('/', asyncWrapper(getAllContactsController))
-
 router.get('/:contactId', asyncWrapper(getByIdContactController))
-
 router.post('/', validateCreateContact, asyncWrapper(createContactController))
-
 router.delete('/:contactId', asyncWrapper(removeContactController))
-
 router.put('/:contactId', validateUpdateContact, asyncWrapper(updateContactController))
-
 router.patch('/:contactId/favorite', asyncWrapper(updateFavoriteFieldController))
 
 module.exports = router

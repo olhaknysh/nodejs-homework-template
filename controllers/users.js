@@ -1,7 +1,9 @@
 const {
     registerUser,
     loginUser,
-    updateAvatar
+    updateAvatar,
+    getVerificationToken,
+    sendVerificationRequest
 } = require('../services/userService')
 
 const registerUserController = async (req, res) => {
@@ -37,11 +39,27 @@ const updateAvatarController = async (req, res) => {
     res.json({ avatarURL })
 }
 
+const getVerificationTokenController = async (req, res) => {
+    const { verificationToken } = req.params;
+    await getVerificationToken(verificationToken);
+
+    res.json({ message: 'Verification successful' })
+}
+
+const sendVerificationRequestController = async (req, res) => {
+    const { email } = req.body;
+    await sendVerificationRequest(email);
+
+    res.json({ 'message': 'Verification email sent' })
+}
+
 
 module.exports = {
     registerUserController,
     loginUserController,
     logoutUserController,
     getCurrentUserController,
-    updateAvatarController
+    updateAvatarController,
+    getVerificationTokenController,
+    sendVerificationRequestController
 }

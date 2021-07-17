@@ -19,10 +19,10 @@ class MissingFieldsError extends CustomError {
     }
 }
 
-class notFoundContact extends CustomError {
+class notFound extends CustomError {
     constructor(message) {
         super(message)
-        this.status = 400;
+        this.status = 404;
     }
 }
 
@@ -68,16 +68,24 @@ class wrongAvatarExtension extends CustomError {
     }
 }
 
+class passedVerification extends CustomError {
+    constructor(message) {
+        super(message)
+        this.status = 400;
+    }
+}
+
 
 module.exports = {
     ValidationError,
     MissingFieldsError,
-    notFoundContact,
+    notFound,
     notCreatedContact,
     notUpdatedContact,
     noFavoriteField,
     notAuthorized,
     UserWithPasswordAlreadyExists,
     wrongAvatarExtension,
+    passedVerification,
     CustomError
 }
